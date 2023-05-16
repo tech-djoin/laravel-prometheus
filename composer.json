@@ -19,7 +19,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "TechDjoin\\LaravelPrometheus\\LaravelPrometheusServiceProvider"
+                "TechDjoin\\LaravelPrometheus\\PrometheusServiceProvider"
             ]
         }
     }
