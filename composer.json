@@ -1,0 +1,26 @@
+{
+    "name": "tech-djoin/laravel-prometheus",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TechDjoin\\LaravelPrometheus\\": "src/"
+        }
+    },
+    "authors": [{
+        "name": "Alit Indrawan",
+        "email": "alit.indrawan@djoin.id"
+    }],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.4|^8.0",
+        "illuminate/support": "^8.0|^9.0|^10.0",
+        "promphp/prometheus_client_php": "^2.7"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "TechDjoin\\LaravelPrometheus\\LaravelPrometheusServiceProvider"
+            ]
+        }
+    }
+}
