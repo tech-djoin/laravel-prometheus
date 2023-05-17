@@ -3,7 +3,8 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "TechDjoin\\LaravelPrometheus\\": "src/"
+            "TechDjoin\\LaravelPrometheus\\": "src/",
+            "TechDjoin\\LaravelPrometheus\\Tests\\": "tests"
         }
     },
     "authors": [{
@@ -15,6 +16,19 @@
         "php": "^7.4|^8.0",
         "illuminate/support": "^8.0|^9.0|^10.0",
         "promphp/prometheus_client_php": "^2.7"
+    },
+    "scripts": {
+        "test": "vendor/bin/pest"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.27",
+        "pestphp/pest": "^1.23",
+        "pestphp/pest-plugin-laravel": "^1.4"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
     },
     "extra": {
         "laravel": {

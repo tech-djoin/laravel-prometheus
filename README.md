@@ -40,6 +40,12 @@ Route::post('/dashboard', function () {
 })->middleware(\TechDjoin\LaravelPrometheus\Middleware\MetricCollector::class);
 ```
 
+## Testing
+
+```bash
+composer test
+```
+
 ## License
 This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/MarketingPipeline/README-Quotes/blob/main/LICENSE) file for details.
 
