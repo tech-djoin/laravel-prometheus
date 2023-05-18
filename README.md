@@ -5,6 +5,13 @@
 
 Laravel Prometheus is a package that allows you to integrate Prometheus, a popular open-source monitoring and alerting toolkit, into your Laravel applications. Prometheus is widely used for monitoring various aspects of software systems, including metrics, time series data, and alerting.
 
+This package uses Redis to do the client side aggregation and also need installed phpredis extension for communication with the Redis key-value store. To install the phpredis extension you can follow link below:
+
+```bash
+https://github.com/phpredis/phpredis/blob/develop/INSTALL.md
+```
+
+
 ## Installation
 
 You can install the package via composer:
