@@ -32,9 +32,9 @@ class PrometheusServiceProvider extends ServiceProvider
         $this->app->bind(Adapter::class, function () {
             return new Redis(
                 [
-                    'host' => 'redis',
-                    'port' => 6379,
-                    'password' => null,
+                    'host' => config('database.redis.default.host'),
+                    'port' => config('database.redis.default.port'),
+                    'password' => config('database.redis.default.password'),
                 ]
             );
         });
