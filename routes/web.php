@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Prometheus\RenderTextFormat;
 use Prometheus\CollectorRegistry;
 use Illuminate\Support\Facades\Route;
@@ -15,7 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/metrics', function (CollectorRegistry $collectorRegistry) {
+Route::get('/metrics/{secret?}', function (Request $request, CollectorRegistry $collectorRegistry) {
+
+    // Get secret value from request parameters
+    $secretClient = $request->route('secret');
+
+    // Get secret value from config
+    $secretConfig = config('prometheus.secret');
+
+    // Compare secret, if not equal then redirect to not found page
+    if($secretClient !== $secretConfig) abort(404);
+
     $renderer = new RenderTextFormat();
     $result = $renderer->render($collectorRegistry->getMetricFamilySamples());
 

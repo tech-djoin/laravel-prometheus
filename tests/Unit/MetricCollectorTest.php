@@ -12,7 +12,7 @@ it('does not initialize the counter when config is false', function () {
     // Mock the CollectorRegistry class
     $collectorRegistryMock = (object) Mockery::mock(CollectorRegistry::class);
 
-    // Set isEnable to false
+    // Set config enable to false
     Config::set('prometheus.enabled', false);
     new MetricCollector($collectorRegistryMock);
 

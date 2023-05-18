@@ -47,6 +47,11 @@ Route::post('/dashboard', function () {
 })->middleware(\TechDjoin\LaravelPrometheus\Middleware\MetricCollector::class);
 ```
 
+## Exporting Metrics
+This package adds a `/metrics` end-point, enabled by default, which exposes all metrics gathered by collectors.
+
+If you would like to protect this end-point, you can add secret value on `LARAVEL_PROMETHEUS_SECRET` in your .env files, and you can only access the end-point using `/metrics/{secret}`
+
 ## Testing
 
 ```bash
