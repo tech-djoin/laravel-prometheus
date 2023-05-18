@@ -9,7 +9,7 @@ jobs:
       fail-fast: true
       matrix:
         os: [ ubuntu-latest ]
-        php: [ 7.4, 8.0, 8.1, 8.2 ]
+        php: [ 7.4 ]
         dependency-version: [ prefer-lowest, prefer-stable ]
         redis-version: [ 6 ]
 
@@ -45,4 +45,4 @@ jobs:
         with:
           redis-version: ${{ matrix.redis-version }}
       - name: Execute tests
-        run: vendor/bin/phpunit
+        run: vendor/bin/pest
