@@ -25,6 +25,12 @@ class PrometheusServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__.'/../config/prometheus.php' => config_path('prometheus.php'),
             ], 'config');
+            $this->publishes([
+                __DIR__.'/../config/prometheus.yml' => \base_path('prometheus.yml.bak'),
+            ]);
+            $this->publishes([
+                __DIR__.'/../config/docker-compose.yml' => \base_path('docker-compose.yml.bak'),
+            ]);
         }
 
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
