@@ -38,6 +38,9 @@ class MetricCollector
 
         $response = $next($request);
 
+        // Skip metric collect
+        if($this->isBlackListPath($request->route()->uri)) return $next($request);
+
         // Increase the number of http requests by 1 for label uri
         $this->http_request_counter->incBy(1 , [$request->route()->uri]);
 
@@ -47,5 +50,19 @@ class MetricCollector
     private function isEnabled(): bool
     {
         return config('prometheus.enabled');
+    }
+
+    private function isBlackListPath($path): bool
+    {
+        $blackList = [
+            'metrics/{secret?}'
+        ];
+
+        foreach ($blackList as $list) {
+            // Pattern matching
+            if(fnmatch($list, $path)) return true;
+        }
+
+        return false;
     }
 }
