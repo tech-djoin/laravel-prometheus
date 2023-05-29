@@ -41,6 +41,7 @@ class PrometheusServiceProvider extends ServiceProvider
                     'host' => config('database.redis.default.host'),
                     'port' => config('database.redis.default.port'),
                     'password' => config('database.redis.default.password'),
+                    'timeout' => 1, // one seconds
                 ]
             );
         });
