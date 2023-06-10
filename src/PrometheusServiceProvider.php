@@ -2,9 +2,11 @@
 
 namespace TechDjoin\LaravelPrometheus;
 
+use Illuminate\Support\Facades\Log;
 use Prometheus\Storage\Redis;
 use Prometheus\CollectorRegistry;
 use Illuminate\Support\ServiceProvider;
+use Prometheus\Storage\InMemory;
 
 class PrometheusServiceProvider extends ServiceProvider
 {
@@ -35,19 +37,27 @@ class PrometheusServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
-        $this->app->bind(Adapter::class, function () {
+        $this->app->bind(Adapter::class, function ($app) {
             return new Redis(
                 [
                     'host' => config('database.redis.default.host'),
                     'port' => config('database.redis.default.port'),
                     'password' => config('database.redis.default.password'),
-                    'timeout' => 1, // one seconds
+                    'timeout' => 1, // one second
                 ]
             );
         });
 
         $this->app->singleton(CollectorRegistry::class, function () {
-            return new CollectorRegistry($this->app->make(Adapter::class));
+            try {
+                return new CollectorRegistry($this->app->make(Adapter::class));
+            } catch (\Throwable $th) {
+                Log::error($th);
+
+                // In case of exception during initialization Redis adapter
+                // Create a adapter In Memory
+                return new CollectorRegistry(new InMemory());
+            }
         });
     }
 }

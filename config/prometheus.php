@@ -1,6 +1,12 @@
 <?php
 
 return [
+
+    /**
+     * Namespace for Laravel Prometheus metrics.
+     */
+    'namespace' => env('LARAVEL_PROMETHEUS_NAMESPACE', 'app'),
+
     /**
      * Boolean value for enable and disable the Laravel Prometheus middleware.
      */

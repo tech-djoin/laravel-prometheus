@@ -17,7 +17,7 @@ class MetricCollector
         if(!$this->isEnabled()) return;
 
         $this->http_request_counter = $collectorRegistry->getOrRegisterCounter(
-            config('prometheus.namespace', 'app'), // Counter namespace
+            config('prometheus.namespace'), // Counter namespace
             'http_request_totals', // Counter name
             'HTTP request Total', // Counter Help string
             ['path'], // Counter labels
@@ -33,13 +33,13 @@ class MetricCollector
      */
     public function handle(Request $request, Closure $next)
     {
-        // Skip metric collect
-        if(!$this->isEnabled()) return $next($request);
-
         $response = $next($request);
 
         // Skip metric collect
-        if($this->isBlackListPath($request->route()->uri)) return $next($request);
+        if(!$this->isEnabled()) return $response;
+
+        // Skip metric collect
+        if($this->isBlackListPath($request->route()->uri)) return $response;
 
         // Increase the number of http requests by 1 for label uri
         $this->http_request_counter->incBy(1 , [$request->route()->uri]);
