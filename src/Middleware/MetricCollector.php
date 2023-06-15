@@ -6,10 +6,12 @@ use Closure;
 use Prometheus\Counter;
 use Illuminate\Http\Request;
 use Prometheus\CollectorRegistry;
+use Prometheus\Histogram;
 
 class MetricCollector
 {
     protected Counter $http_request_counter;
+    protected Histogram $http_latency_histogram;
 
     public function __construct(CollectorRegistry $collectorRegistry)
     {
@@ -22,6 +24,14 @@ class MetricCollector
             'HTTP request Total', // Counter Help string
             ['path'], // Counter labels
         );
+
+        $this->http_latency_histogram = $collectorRegistry->getOrRegisterHistogram(
+            config('prometheus.namespace'), // Counter namespace
+            'http_request_latency_seconds', // Counter name
+            'Latency of HTTP requests.', // Counter Help string
+            ['path'],
+            [0.1, 0.3, 0.5, 0.7, 0.9]
+        );
     }
 
     /**
@@ -33,6 +43,9 @@ class MetricCollector
      */
     public function handle(Request $request, Closure $next)
     {
+        // Record start time
+        $start = microtime(true);
+
         $response = $next($request);
 
         // Skip metric collect
@@ -43,6 +56,10 @@ class MetricCollector
 
         // Increase the number of http requests by 1 for label uri
         $this->http_request_counter->incBy(1 , [$request->route()->uri]);
+
+        // Observe latency of http requests by label uri
+        $latency = \microtime(true) - $start;
+        $this->http_latency_histogram->observe($latency,[$request->route()->uri]);
 
         return $response;
     }
