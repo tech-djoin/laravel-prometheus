@@ -11,6 +11,7 @@ use Prometheus\Histogram;
 class MetricCollector
 {
     protected Counter $http_request_counter;
+    protected Counter $http_request_code_counter;
     protected Histogram $http_latency_histogram;
 
     public function __construct(CollectorRegistry $collectorRegistry)
@@ -22,7 +23,14 @@ class MetricCollector
             config('prometheus.namespace'), // Counter namespace
             'http_request_totals', // Counter name
             'HTTP request Total', // Counter Help string
-            ['path'], // Counter labels
+            ['method','path'], // Counter labels
+        );
+
+        $this->http_request_code_counter = $collectorRegistry->getOrRegisterCounter(
+            config('prometheus.namespace'), // Counter namespace
+            'http_request_codes', // Counter name
+            'HTTP request Code', // Counter Help string
+            ['code'], // Counter labels
         );
 
         $this->http_latency_histogram = $collectorRegistry->getOrRegisterHistogram(
@@ -55,7 +63,10 @@ class MetricCollector
         if($this->isBlackListPath($request->route()->uri)) return $response;
 
         // Increase the number of http requests by 1 for label uri
-        $this->http_request_counter->incBy(1 , [$request->route()->uri]);
+        $this->http_request_counter->incBy(1 , [$request->method(),$request->route()->uri]);
+
+        // Increase the number of http requests code by 1 for code
+        $this->http_request_code_counter->incBy(1 , [$response->getStatusCode()]);
 
         // Observe latency of http requests by label uri
         $latency = \microtime(true) - $start;
