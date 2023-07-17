@@ -22,22 +22,15 @@ class MetricCollector
         $this->http_request_counter = $collectorRegistry->getOrRegisterCounter(
             config('prometheus.namespace'), // Counter namespace
             'http_request_totals', // Counter name
-            'HTTP request Total', // Counter Help string
-            ['method','path'], // Counter labels
-        );
-
-        $this->http_request_code_counter = $collectorRegistry->getOrRegisterCounter(
-            config('prometheus.namespace'), // Counter namespace
-            'http_request_codes', // Counter name
-            'HTTP request Code', // Counter Help string
-            ['code'], // Counter labels
+            'The total number of application request http', // Counter Help string
+            ['method','path','code'], // Counter labels
         );
 
         $this->http_latency_histogram = $collectorRegistry->getOrRegisterHistogram(
             config('prometheus.namespace'), // Counter namespace
             'http_request_latency_seconds', // Counter name
             'Latency of HTTP requests.', // Counter Help string
-            ['path'],
+            ['method','path'],
             [0.1, 0.3, 0.5, 0.7, 0.9]
         );
     }
@@ -63,14 +56,11 @@ class MetricCollector
         if($this->isBlackListPath($request->route()->uri)) return $response;
 
         // Increase the number of http requests by 1 for label uri
-        $this->http_request_counter->incBy(1 , [$request->method(),$request->route()->uri]);
-
-        // Increase the number of http requests code by 1 for code
-        $this->http_request_code_counter->incBy(1 , [$response->getStatusCode()]);
+        $this->http_request_counter->incBy(1 , [$request->method(), $request->route()->uri,$response->getStatusCode()]);
 
         // Observe latency of http requests by label uri
         $latency = \microtime(true) - $start;
-        $this->http_latency_histogram->observe($latency,[$request->route()->uri]);
+        $this->http_latency_histogram->observe($latency,[$request->route()->method(), $request->route()->uri]);
 
         return $response;
     }
