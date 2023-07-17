@@ -60,7 +60,7 @@ class MetricCollector
 
         // Observe latency of http requests by label uri
         $latency = \microtime(true) - $start;
-        $this->http_latency_histogram->observe($latency,[$request->route()->method(), $request->route()->uri]);
+        $this->http_latency_histogram->observe($latency,[$request->method(), $request->route()->uri]);
 
         return $response;
     }
