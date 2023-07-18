@@ -51,6 +51,7 @@ class MetricCollector
 
         // Skip metric collect
         if(!$this->isEnabled()) return $response;
+        if(!$request->route()) return $response;
 
         // Skip metric collect
         if($this->isBlackListPath($request->route()->uri)) return $response;
