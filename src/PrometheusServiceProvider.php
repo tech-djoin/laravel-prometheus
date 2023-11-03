@@ -52,8 +52,6 @@ class PrometheusServiceProvider extends ServiceProvider
             try {
                 return new CollectorRegistry($this->app->make(Adapter::class));
             } catch (\Throwable $th) {
-                Log::error($th);
-
                 // In case of exception during initialization Redis adapter
                 // Create a adapter In Memory
                 return new CollectorRegistry(new InMemory());
