@@ -10,4 +10,11 @@ return [
      * Secret value for access the /metrics endpoint
      */
     'secret' => env('LARAVEL_PROMETHEUS_SECRET', null),
+
+    /**
+     * Redis connection name to use for storing metrics.
+     * Corresponds to a key under config('database.redis').
+     * Defaults to 'default' (db0) when null.
+     */
+    'redis_connection' => env('LARAVEL_PROMETHEUS_REDIS_CONNECTION', 'default'),
 ];

@@ -30,11 +30,14 @@ class PrometheusServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 
         $this->app->bind(Adapter::class, function () {
+            $connection = config('prometheus.redis_connection', 'default');
+
             return new Redis(
                 [
-                    'host' => config('database.redis.default.host'),
-                    'port' => config('database.redis.default.port'),
-                    'password' => config('database.redis.default.password'),
+                    'host'     => config("database.redis.{$connection}.host"),
+                    'port'     => config("database.redis.{$connection}.port"),
+                    'password' => config("database.redis.{$connection}.password"),
+                    'database' => (int) config("database.redis.{$connection}.database", 0),
                 ]
             );
         });
